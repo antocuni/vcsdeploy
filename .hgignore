@@ -1,0 +1,6 @@
+syntax: glob
+
+*~
+*.pyc
+Ui_*.py
+*_rc.py
