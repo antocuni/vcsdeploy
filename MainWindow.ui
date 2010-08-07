@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>272</width>
-    <height>98</height>
+    <width>274</width>
+    <height>109</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,15 +48,39 @@
       <string>Update</string>
      </property>
      <property name="icon">
-      <iconset resource="vcs_deploy.qrc">
-       <normaloff>:/images/images/mail-send-receive.png</normaloff>:/images/images/mail-send-receive.png</iconset>
+      <iconset resource="vcsdeploy.qrc">
+       <normaloff>:/images/view-refresh.png</normaloff>:/images/view-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="btnQuit">
+     <property name="text">
+      <string>Quit</string>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
  <resources>
-  <include location="vcs_deploy.qrc"/>
+  <include location="vcsdeploy.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>btnQuit</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>204</x>
+     <y>92</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>136</x>
+     <y>54</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
