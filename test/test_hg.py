@@ -43,8 +43,7 @@ def test_get_list_of_versions(logic):
 
 
 def test_update_to(logic):
-    hg = logic.hg
-    myfile = hg.path.join('myfile.py')
+    myfile = logic.config.path.join('myfile.py')
     logic.update_to('Version 1.0')
     assert myfile.read() == 'version = 1.0'
     logic.update_to('Version 1.1')
