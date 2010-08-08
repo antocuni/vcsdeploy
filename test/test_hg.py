@@ -22,7 +22,10 @@ def pytest_funcarg__hg(request):
 
 def test_get_current_version(hg):
     logic = MercurialLogic(hg, config=None)
+    assert logic.get_current_version() == 'Latest version'
     hg.update('Version 1.1')
     assert logic.get_current_version() == 'Version 1.1'
     hg.update(rev='Version 1.0')
     assert logic.get_current_version() == 'Version 1.0'
+    hg.update()
+    assert logic.get_current_version() == 'Latest version'

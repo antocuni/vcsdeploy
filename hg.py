@@ -32,7 +32,10 @@ class MercurialLogic(object):
         if ' ' not in out:
             return None
         hash, tag = out.split(' ', 1)
-        return tag.strip()
+        tag = tag.strip()
+        if tag == 'tip':
+            return 'Latest version'
+        return tag
 
     def get_list_of_versions(self):
         pass
