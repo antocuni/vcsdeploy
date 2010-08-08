@@ -2,6 +2,7 @@ import re
 
 class DefaultConfig(object):
     version_regex = '^Version'
+    path = None
 
 
 class AbstractLogic(object):

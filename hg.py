@@ -27,9 +27,9 @@ class MercurialRepo(object):
 
 class MercurialLogic(AbstractLogic):
 
-    def __init__(self, hg, config):
-        self.hg = hg
+    def __init__(self, config):
         self.config = config
+        self.hg = MercurialRepo(config.path, create=False)
 
     def get_current_version(self):
         out = self.hg.identify().strip()
