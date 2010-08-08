@@ -1,11 +1,15 @@
+import re
 import py
 from mercurial import commands, ui, hg
+
+from vcsdeploy.logic import AbstractLogic
 
 class MercurialRepo(object):
 
     def __init__(self, path, create=False):
-        self.ui = ui.ui()
-        self.repo = hg.repository(self.ui, str(path), create)
+        self.path = path
+        self.repo = hg.repository(ui.ui(), str(path), create)
+        self.ui = self.repo.ui
 
     def __getattr__(self, name):
         cmd = getattr(commands, name)
@@ -21,7 +25,7 @@ class MercurialRepo(object):
         return fn
 
 
-class MercurialLogic(object):
+class MercurialLogic(AbstractLogic):
 
     def __init__(self, hg, config):
         self.hg = hg
@@ -38,7 +42,14 @@ class MercurialLogic(object):
         return tag
 
     def get_list_of_versions(self):
-        pass
+        out = self.hg.tags()
+        versions = []
+        for line in out.splitlines():
+            tag, rev = line.rsplit(' ', 1)
+            tag = tag.strip()
+            if re.match(self.config.version_regex, tag):
+                versions.append(tag)
+        return versions
 
     def update_to(self, version):
-        pass
+        self.hg.update(version)
