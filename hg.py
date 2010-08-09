@@ -31,6 +31,9 @@ class MercurialLogic(AbstractLogic):
         self.config = config
         self.hg = MercurialRepo(config.path, create=False)
 
+    def pull(self):
+        self.hg.pull()
+
     def get_current_version(self):
         out = self.hg.identify().strip()
         if ' ' not in out:

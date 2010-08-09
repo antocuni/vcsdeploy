@@ -36,6 +36,8 @@ def test_get_current_version(logic):
     assert logic.get_current_version() == 'Version 1.0'
     hg.update()
     assert logic.get_current_version() == 'Latest version'
+    hg.update(rev=1)
+    assert logic.get_current_version() is None
 
 
 def test_get_list_of_versions(logic):
@@ -48,3 +50,34 @@ def test_update_to(logic):
     assert myfile.read() == 'version = 1.0'
     logic.update_to('Version 1.1')
     assert myfile.read() == 'version = 1.1'
+
+
+def test_pull(tmpdir):
+    # setup a "remote" repo where the "development" will go on, and a "local"
+    # one where the program is installed. The idea is that the local will pull
+    # from the remote
+    remotedir = tmpdir.join('remote')
+    localdir = tmpdir.join('local')
+    hg_remote = create_repo(remotedir)
+    hg_remote.clone(localdir)
+
+    # simulate some development
+    myfile_remote = remotedir.join('myfile.py')
+    myfile_remote.write('version = 1.2')
+    hg_remote.commit(message='new fancy features')
+    hg_remote.tag('Version 1.2')
+    
+    # use Version 1.1 in production
+    config = DefaultConfig()
+    config.path = localdir
+    logic = MercurialLogic(config)
+    logic.update_to('Version 1.1')
+    assert logic.get_current_version() == 'Version 1.1'
+
+    # now, let's look for updates
+    logic.pull()
+    assert logic.get_current_version() == 'Version 1.1'
+    assert logic.get_list_of_versions() == ['Version 1.2', 'Version 1.1', 'Version 1.0']
+    logic.update_to('Version 1.2')
+    assert logic.get_current_version() == 'Version 1.2'
+    

@@ -6,6 +6,9 @@ class DefaultConfig(object):
 
 
 class AbstractLogic(object):
+    def pull(self):
+        raise NotImplementedError
+    
     def get_current_version(self):
         raise NotImplementedError
     
