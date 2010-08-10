@@ -1,7 +1,10 @@
 .. -*- restructuredtext -*-
 
-vcsdeploy - Easily deploy your applications through your VCS
-=============================================================
+vcsdeploy
+==========
+
+Easily deploy your applications through your VCS
+=================================================
 
 ``vcsdeploy`` allows you to easily deploy updates of your application to your
 customers through your favorite Version Control System.  So far, only
