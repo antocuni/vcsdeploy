@@ -1,3 +1,5 @@
+.. -*- restructuredtext -*-
+
 vcsdeploy - Easily deploy your applications through your VCS
 =============================================================
 
