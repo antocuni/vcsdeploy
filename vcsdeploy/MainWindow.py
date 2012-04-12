@@ -10,6 +10,9 @@ class MainWindow(QtGui.QDialog, Ui_MainWindow):
         self.logic = MercurialLogic(config)
         self.setupUi(self)
         self.connect(self.btnUpdate, QtCore.SIGNAL("clicked()"), self.do_update)
+        self.cmbUpdateTo.setEditable(config.editable_revision)
+        self.lblCurrentRevision.setVisible(config.show_revision)
+        self.lblCurrentRevisionValue.setVisible(config.show_revision)
         self.init()
 
     def init(self):

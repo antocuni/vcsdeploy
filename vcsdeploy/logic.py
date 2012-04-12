@@ -19,7 +19,8 @@ def load_config(configfile):
 class DefaultConfig(object):
     version_regex = '^Version'
     path = None
-
+    editable_revision = False
+    show_revision = True
 
 class AbstractLogic(object):
     def pull(self):
