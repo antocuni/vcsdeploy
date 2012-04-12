@@ -21,6 +21,7 @@ class DefaultConfig(object):
     path = None
     editable_revision = False
     show_revision = True
+    logfile = None
 
 class VcsError(Exception):
     pass
