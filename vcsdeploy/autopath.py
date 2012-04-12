@@ -7,4 +7,5 @@ def autopath():
     print 'Inserting %s in sys.path' % parentdir
     sys.path.insert(0, str(parentdir))
 
+
 autopath()

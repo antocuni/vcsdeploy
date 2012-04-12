@@ -3,9 +3,9 @@
 import autopath
 import sys
 from PyQt4 import QtGui, QtCore
-import makefile
-from MainWindow import MainWindow
-from logic import DefaultConfig, load_config
+import vcsdeploy.makefile
+from vcsdeploy.MainWindow import MainWindow
+from vcsdeploy.logic import DefaultConfig, load_config
 
 def main(configfile):
     config = load_config(configfile)
