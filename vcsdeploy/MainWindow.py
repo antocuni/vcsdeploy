@@ -3,6 +3,7 @@ from PyQt4 import QtGui, QtCore
 from Ui_MainWindow import Ui_MainWindow
 from hg import MercurialLogic
 
+
 class MainWindow(QtGui.QDialog, Ui_MainWindow):
     def __init__(self, config):
         QtGui.QDialog.__init__(self)
@@ -23,10 +24,12 @@ class MainWindow(QtGui.QDialog, Ui_MainWindow):
         self.cmbUpdateTo.addItems(versions)
 
     def sync_current_version(self):
-        curver = self.logic.get_current_version()
-        if curver is None:
-            curver = 'Unknown'
-        self.lblCurrentVersion.setText(curver)
+        current_ver = self.logic.get_current_version()
+        current_rev = self.logic.get_current_revision()
+        if current_ver is None:
+            current_ver = 'Unknown'
+        self.lblCurrentVersion.setText(current_ver)
+        self.lblCurrentRevisionValue.setText(current_rev)
 
     def pull_repo(self):
         import time
