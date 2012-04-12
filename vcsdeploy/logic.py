@@ -34,7 +34,10 @@ class AbstractLogic(object):
     
     def get_current_version(self):
         raise NotImplementedError
-    
+
+    def get_current_revision(self):
+        raise NotImplementedError
+
     def get_list_of_versions(self):
         raise NotImplementedError
 
