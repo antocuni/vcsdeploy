@@ -1,7 +1,7 @@
 from threading import Thread
 from PyQt4 import QtGui, QtCore
-from Ui_MainWindow import Ui_MainWindow
-from hg import MercurialLogic
+from vcsdeploy.Ui_MainWindow import Ui_MainWindow
+from vcsdeploy.hg import MercurialLogic
 
 
 class MainWindow(QtGui.QDialog, Ui_MainWindow):
