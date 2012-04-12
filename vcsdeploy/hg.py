@@ -33,18 +33,25 @@ class MercurialLogic(AbstractLogic):
     def pull(self):
         self.hg.pull()
 
-    def get_current_version(self):
+    def _get_hash_and_tag(self):
         out = self.hg.identify().strip()
         if ' ' not in out:
-            return None
+            return out, None
         hash, tag = out.split(' ', 1)
+        return hash, tag
+
+    def get_current_version(self):
+        hash, tag = self._get_hash_and_tag()
+        if tag is None:
+            return None
         tag = tag.strip()
         if tag == 'tip':
             return 'Latest version'
         return tag
 
     def get_current_revision(self):
-        return 'xxx'
+        hash, tag = self._get_hash_and_tag()
+        return hash
 
     def get_list_of_versions(self):
         out = self.hg.tags()

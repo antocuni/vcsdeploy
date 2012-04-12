@@ -56,6 +56,14 @@ def test_unknown_revision(logic):
     py.test.raises(UnknownRevisionError, "logic.update_to('foobar')")
     py.test.raises(UnknownRevisionError, "logic.update_to('xxx 1.2.3')")
 
+def test_get_current_revision(logic):
+    rev0 = logic.get_current_revision()
+    logic.update_to('Version 1.0')
+    rev1 = logic.get_current_revision()
+    assert rev0 != rev1
+    logic.update_to(rev0)
+    assert logic.get_current_revision() == rev0
+
 
 def test_pull(tmpdir):
     # setup a "remote" repo where the "development" will go on, and a "local"
