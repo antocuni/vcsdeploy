@@ -1,7 +1,8 @@
 from threading import Thread
 from PyQt4 import QtGui, QtCore
-from vcsdeploy.Ui_MainWindow import Ui_MainWindow
-from vcsdeploy.hg import MercurialLogic
+from Ui_MainWindow import Ui_MainWindow
+from logic import UnknownRevisionError
+from hg import MercurialLogic
 
 
 class MainWindow(QtGui.QDialog, Ui_MainWindow):
@@ -46,6 +47,9 @@ class MainWindow(QtGui.QDialog, Ui_MainWindow):
 
     def do_update(self):
         version = str(self.cmbUpdateTo.currentText())
-        self.logic.update_to(version)
+        try:
+            self.logic.update_to(version)
+        except UnknownRevisionError, e:
+            msg = 'Cannot update to the specified revision: %s\n[%s]' % (version, e)
+            QtGui.QMessageBox.warning(self, 'Error', msg)
         self.sync_current_version()
-
