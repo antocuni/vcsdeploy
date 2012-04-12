@@ -44,6 +44,9 @@ class MercurialLogic(AbstractLogic):
             return 'Latest version'
         return tag
 
+    def get_current_revision(self):
+        return 'xxx'
+
     def get_list_of_versions(self):
         out = self.hg.tags()
         versions = []
