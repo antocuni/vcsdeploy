@@ -94,3 +94,19 @@ def test_pull(tmpdir):
     logic.update_to('Version 1.2')
     assert logic.get_current_version() == 'Version 1.2'
     
+def test_log(tmpdir, logic):
+    logfile = tmpdir.join('log')
+    config = DefaultConfig()
+    config.path = logic.hg.path
+    config.logfile = str(logfile)
+    logic = MercurialLogic(config)
+    #
+    logic.update_to('Version 1.0')
+    rev0 = logic.get_current_revision()
+    logic.update_to('Version 1.1')
+    rev1 = logic.get_current_revision()
+    #
+    lines = logfile.readlines()
+    assert len(lines) == 2
+    assert lines[0].endswith('updated to %s Version 1.0\n' % rev0)
+    assert lines[1].endswith('updated to %s Version 1.1\n' % rev1)

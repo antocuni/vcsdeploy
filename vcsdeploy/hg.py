@@ -1,4 +1,5 @@
 import re
+import datetime
 import py
 from mercurial import commands, ui, hg, error
 from vcsdeploy.logic import AbstractLogic, UnknownRevisionError
@@ -68,3 +69,15 @@ class MercurialLogic(AbstractLogic):
             self.hg.update(version)
         except (error.RepoLookupError, error.ParseError), e:
             raise UnknownRevisionError(str(e))
+        else:
+            self.log_update()
+
+    def log_update(self):
+        logfile = self.config.logfile
+        if logfile is None:
+            return
+        logfile = py.path.local(logfile)
+        identify = self.hg.identify().strip()
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+        line = '[%s] updated to %s\n' % (timestamp, identify)
+        logfile.write(line, mode='a')
