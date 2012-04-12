@@ -1,4 +1,5 @@
-from vcsdeploy.logic import DefaultConfig
+import py
+from vcsdeploy.logic import DefaultConfig, UnknownRevisionError
 from vcsdeploy.hg import MercurialLogic, MercurialRepo
 
 def create_repo(tmpdir):
@@ -50,6 +51,10 @@ def test_update_to(logic):
     assert myfile.read() == 'version = 1.0'
     logic.update_to('Version 1.1')
     assert myfile.read() == 'version = 1.1'
+
+def test_unknown_revision(logic):
+    py.test.raises(UnknownRevisionError, "logic.update_to('foobar')")
+    py.test.raises(UnknownRevisionError, "logic.update_to('xxx 1.2.3')")
 
 
 def test_pull(tmpdir):

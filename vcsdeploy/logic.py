@@ -22,6 +22,12 @@ class DefaultConfig(object):
     editable_revision = False
     show_revision = True
 
+class VcsError(Exception):
+    pass
+
+class UnknownRevisionError(VcsError):
+    pass
+
 class AbstractLogic(object):
     def pull(self):
         raise NotImplementedError

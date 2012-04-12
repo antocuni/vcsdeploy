@@ -1,8 +1,7 @@
 import re
 import py
-from mercurial import commands, ui, hg
-
-from vcsdeploy.logic import AbstractLogic
+from mercurial import commands, ui, hg, error
+from vcsdeploy.logic import AbstractLogic, UnknownRevisionError
 
 class MercurialRepo(object):
 
@@ -58,4 +57,7 @@ class MercurialLogic(AbstractLogic):
         return versions
 
     def update_to(self, version):
-        self.hg.update(version)
+        try:
+            self.hg.update(version)
+        except (error.RepoLookupError, error.ParseError), e:
+            raise UnknownRevisionError(str(e))
