@@ -5,11 +5,7 @@ import sys
 from PyQt4 import QtGui, QtCore
 import makefile
 from MainWindow import MainWindow
-
-def load_config(configfile):
-    dic = {}
-    execfile(configfile, dic)
-    return dic['Config']
+from logic import DefaultConfig, load_config
 
 def main(configfile):
     config = load_config(configfile)
