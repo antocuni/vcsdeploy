@@ -41,3 +41,6 @@ class GitLogic(AbstractLogic):
             raise UnknownRevisionError(str(e))
         ## self.log_update()
         ## return self.generate_update_report_maybe()
+
+    def get_current_revision(self):
+        return self.repo.head.commit.hexsha
