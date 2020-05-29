@@ -24,3 +24,13 @@ class GitLogic(AbstractLogic):
         if self.repo.head.commit == self.repo.branches.master.commit:
             return 'Latest version'
         return None
+
+    def get_list_of_versions(self):
+        versions = []
+        for tag in self.repo.tags:
+            if re.match(self.config.version_regex, tag.name):
+                versions.append(tag.name)
+        #
+        # repo.tags are from oldest to newest, but we want the reverse
+        versions.reverse()
+        return versions
