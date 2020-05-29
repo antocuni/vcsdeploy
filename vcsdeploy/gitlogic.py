@@ -44,3 +44,10 @@ class GitLogic(AbstractLogic):
 
     def get_current_revision(self):
         return self.repo.head.commit.hexsha
+
+    def pull(self):
+        """
+        NOTE: this is more or less the equivalent of "hg pull", NOT "git pull"
+        """
+        origin = self.repo.remotes[0]
+        origin.fetch()

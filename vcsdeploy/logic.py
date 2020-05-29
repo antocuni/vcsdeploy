@@ -6,8 +6,11 @@ class UnknownRevisionError(VcsError):
 
 class AbstractLogic(object):
     def pull(self):
+        """
+        NOTE: this is more or less the equivalent of "hg pull", NOT "git pull"
+        """
         raise NotImplementedError
-    
+
     def get_current_version(self):
         raise NotImplementedError
 
@@ -19,4 +22,3 @@ class AbstractLogic(object):
 
     def update_to(self, version):
         raise NotImplementedError
-

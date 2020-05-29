@@ -151,3 +151,6 @@ class TestGitLogic(BaseTestLogic):
         if rev == 1:
             rev = 'HEAD~1'
         self.r.git.checkout(rev)
+
+    def clone_test_repo(self, dst):
+        self.r.clone(str(dst))
