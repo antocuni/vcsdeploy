@@ -1,8 +1,9 @@
 from threading import Thread
 from PyQt4 import QtGui, QtCore
 from Ui_MainWindow import Ui_MainWindow
-from logic import UnknownRevisionError
-from hg import MercurialLogic
+from vcsdeploy.logic import UnknownRevisionError
+from vcsdeploy.hg import MercurialLogic
+from vcsdeploy.util import openfile
 
 
 class MainWindow(QtGui.QDialog, Ui_MainWindow):
@@ -12,10 +13,19 @@ class MainWindow(QtGui.QDialog, Ui_MainWindow):
         self.logic = MercurialLogic(config)
         self.setupUi(self)
         self.connect(self.btnUpdate, QtCore.SIGNAL("clicked()"), self.do_update)
+        self.config_ui(config)
+        self.init()
+
+    def config_ui(self, config):
         self.cmbUpdateTo.setEditable(config.editable_revision)
         self.lblCurrentRevision.setVisible(config.show_revision)
         self.lblCurrentRevisionValue.setVisible(config.show_revision)
-        self.init()
+        #
+        # display the logo (if any)
+        logo = QtGui.QPixmap(str(config.logo))
+        self.imgLogo.setPixmap(logo)
+        self.imgLogo.setVisible(not logo.isNull())
+
 
     def init(self):
         self.pull_repo()
@@ -48,8 +58,10 @@ class MainWindow(QtGui.QDialog, Ui_MainWindow):
     def do_update(self):
         version = str(self.cmbUpdateTo.currentText())
         try:
-            self.logic.update_to(version)
+            pdf = self.logic.update_to(version)
         except UnknownRevisionError, e:
             msg = 'Cannot update to the specified revision: %s\n[%s]' % (version, e)
             QtGui.QMessageBox.warning(self, 'Error', msg)
         self.sync_current_version()
+        if pdf is not None:
+            openfile(self, pdf)

@@ -3,6 +3,7 @@ import datetime
 import py
 from mercurial import commands, ui, hg, error
 from vcsdeploy.logic import AbstractLogic, UnknownRevisionError
+from vcsdeploy.util import html2pdf
 
 class MercurialRepo(object):
 
@@ -69,8 +70,9 @@ class MercurialLogic(AbstractLogic):
             self.hg.update(version)
         except (error.RepoLookupError, error.ParseError), e:
             raise UnknownRevisionError(str(e))
-        else:
-            self.log_update()
+        #
+        self.log_update()
+        return self.generate_update_report_maybe()
 
     def log_update(self):
         logfile = self.config.logfile
@@ -78,6 +80,18 @@ class MercurialLogic(AbstractLogic):
             return
         logfile = py.path.local(logfile)
         identify = self.hg.identify().strip()
-        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
-        line = '[%s] updated to %s\n' % (timestamp, identify)
+        timestamp = datetime.datetime.now().strftime(self.config.timestamp_format)
+        line = '[%s] updated to: %s\n' % (timestamp, identify)
         logfile.write(line, mode='a')
+
+    def generate_update_report_maybe(self):
+        if self.config.update_report_template is None:
+            return None
+        hash, tag = self._get_hash_and_tag()
+        timestamp = datetime.datetime.now().strftime(self.config.timestamp_format)
+        html = self.config.update_report_template.read()
+        html = html.format(version=tag, revision=hash, timestamp=timestamp)
+        if self.config.create_pdf:
+            return html2pdf(html)
+        else:
+            return html
