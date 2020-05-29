@@ -154,3 +154,7 @@ class TestGitLogic(BaseTestLogic):
 
     def clone_test_repo(self, dst):
         self.r.clone(str(dst))
+
+    @pytest.mark.skip('implement me')
+    def test_log(self, logic):
+        pass
