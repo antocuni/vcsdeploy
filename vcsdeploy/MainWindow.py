@@ -2,7 +2,6 @@ from threading import Thread
 from PyQt4 import QtGui, QtCore
 from Ui_MainWindow import Ui_MainWindow
 from vcsdeploy.logic import UnknownRevisionError
-from vcsdeploy.hg import MercurialLogic
 from vcsdeploy.util import openfile
 
 
@@ -10,11 +9,21 @@ class MainWindow(QtGui.QDialog, Ui_MainWindow):
     def __init__(self, config):
         QtGui.QDialog.__init__(self)
         Ui_MainWindow.__init__(self)
-        self.logic = MercurialLogic(config)
+        self.logic = self.create_logic(config)
         self.setupUi(self)
         self.connect(self.btnUpdate, QtCore.SIGNAL("clicked()"), self.do_update)
         self.config_ui(config)
         self.init()
+
+    def create_logic(self, config):
+        if config.vcs == 'hg':
+            from vcsdeploy.hg import MercurialLogic
+            return MercurialLogic(config)
+        elif config.vcs == 'git':
+            from vcsdeploy.gitlogic import GitLogic
+            return GitLogic(config)
+        else:
+            raise ValueError("Unknown vcs: %s" % config.vcs)
 
     def config_ui(self, config):
         self.cmbUpdateTo.setEditable(config.editable_revision)
@@ -30,7 +39,7 @@ class MainWindow(QtGui.QDialog, Ui_MainWindow):
     def init(self):
         self.pull_repo()
         self.sync_current_version()
-        versions = self.logic.get_list_of_versions()            
+        versions = self.logic.get_list_of_versions()
         self.cmbUpdateTo.clear()
         self.cmbUpdateTo.addItems(versions)
 

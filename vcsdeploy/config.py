@@ -20,6 +20,7 @@ def load_config(configfile, classname='Config'):
 
 
 class DefaultConfig(object):
+    vcs = 'hg'
     version_regex = '^Version'
     editable_revision = False
     show_revision = False
