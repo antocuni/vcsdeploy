@@ -4,44 +4,51 @@ from vcsdeploy.config import DefaultConfig
 from vcsdeploy.logic import UnknownRevisionError
 from vcsdeploy.hg import MercurialLogic, MercurialRepo
 
-def create_repo(tmpdir):
-    hg = MercurialRepo(tmpdir, create=True)
-    myfile = tmpdir.join('myfile.py')
+class BaseTestLogic(object):
 
-    myfile.write('version = 1.0')
-    hg.add(myfile)
-    hg.commit(message='initial checkin')
-    hg.tag('Version 1.0')
+    LogicClass = None
 
-    myfile.write("ops, that's a bug")
-    hg.commit(message='introduce a bug')
-    hg.tag('intermediate tag')
-
-    myfile.write('version = 1.1')
-    hg.commit(message='fix the bug')
-    hg.tag('Version 1.1')
-    return hg
-
-@pytest.fixture
-def logic(request):
-    tmpdir = request.getfuncargvalue('tmpdir')
-    hg = create_repo(tmpdir)
-    config = DefaultConfig()
-    config.path = hg.path
-    return MercurialLogic(config)
+    @pytest.fixture
+    def logic(self, request):
+        self.tmpdir = request.getfuncargvalue('tmpdir')
+        self.create_test_repo(self.tmpdir)
+        config = DefaultConfig()
+        config.path = self.tmpdir
+        return self.LogicClass(config)
 
 
-def test_get_current_version(logic):
-    hg = logic.hg
-    assert logic.get_current_version() == 'Latest version'
-    hg.update('Version 1.1')
-    assert logic.get_current_version() == 'Version 1.1'
-    hg.update(rev='Version 1.0')
-    assert logic.get_current_version() == 'Version 1.0'
-    hg.update()
-    assert logic.get_current_version() == 'Latest version'
-    hg.update(rev=1)
-    assert logic.get_current_version() is None
+
+class TestHgLogic(BaseTestLogic):
+
+    LogicClass = MercurialLogic
+
+    def create_test_repo(self, tmpdir):
+        self._hg = MercurialRepo(tmpdir, create=True)
+        myfile = tmpdir.join('myfile.py')
+        myfile.write('version = 1.0')
+        self.commit_file(myfile, 'initial checkin', tag='Version_1.0')
+        myfile.write("ops, that's a bug")
+        self.commit_file(myfile, 'introduce a bug', tag='intermediate_tag')
+        myfile.write('version = 1.1')
+        self.commit_file(myfile, 'fix the bug', tag='Version_1.1')
+
+    def commit_file(self, fname, message, tag=None):
+        self._hg.add(fname)
+        self._hg.commit(message=message)
+        if tag:
+            self._hg.tag(tag)
+
+    def test_get_current_version(self, logic):
+        hg = logic.hg
+        assert logic.get_current_version() == 'Latest version'
+        hg.update('Version_1.1')
+        assert logic.get_current_version() == 'Version_1.1'
+        hg.update(rev='Version_1.0')
+        assert logic.get_current_version() == 'Version_1.0'
+        hg.update()
+        assert logic.get_current_version() == 'Latest version'
+        hg.update(rev=1)
+        assert logic.get_current_version() is None
 
 
 def test_get_list_of_versions(logic):

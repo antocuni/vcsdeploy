@@ -53,3 +53,6 @@ def test_get_current_version(logic):
     assert logic.get_current_version() == 'Latest version'
     repo.git.checkout('HEAD~1')
     assert logic.get_current_version() is None
+
+def test_get_list_of_versions(logic):
+    assert logic.get_list_of_versions() == ['Version_1.1', 'Version 1.0']
