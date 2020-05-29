@@ -1,5 +1,6 @@
 import py
-from vcsdeploy.logic import DefaultConfig, UnknownRevisionError
+from vcsdeploy.config import DefaultConfig
+from vcsdeploy.logic import UnknownRevisionError
 from vcsdeploy.hg import MercurialLogic, MercurialRepo
 
 def create_repo(tmpdir):
@@ -26,7 +27,7 @@ def pytest_funcarg__logic(request):
     config = DefaultConfig()
     config.path = hg.path
     return MercurialLogic(config)
-    
+
 
 def test_get_current_version(logic):
     hg = logic.hg
@@ -79,7 +80,7 @@ def test_pull(tmpdir):
     myfile_remote.write('version = 1.2')
     hg_remote.commit(message='new fancy features')
     hg_remote.tag('Version 1.2')
-    
+
     # use Version 1.1 in production
     config = DefaultConfig()
     config.path = localdir
@@ -93,7 +94,7 @@ def test_pull(tmpdir):
     assert logic.get_list_of_versions() == ['Version 1.2', 'Version 1.1', 'Version 1.0']
     logic.update_to('Version 1.2')
     assert logic.get_current_version() == 'Version 1.2'
-    
+
 def test_log(tmpdir, logic):
     logfile = tmpdir.join('log')
     config = DefaultConfig()
@@ -108,5 +109,5 @@ def test_log(tmpdir, logic):
     #
     lines = logfile.readlines()
     assert len(lines) == 2
-    assert lines[0].endswith('updated to %s Version 1.0\n' % rev0)
-    assert lines[1].endswith('updated to %s Version 1.1\n' % rev1)
+    assert lines[0].endswith('updated to: %s Version 1.0\n' % rev0)
+    assert lines[1].endswith('updated to: %s Version 1.1\n' % rev1)
