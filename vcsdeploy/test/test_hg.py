@@ -1,4 +1,5 @@
 import py
+import pytest
 from vcsdeploy.config import DefaultConfig
 from vcsdeploy.logic import UnknownRevisionError
 from vcsdeploy.hg import MercurialLogic, MercurialRepo
@@ -21,7 +22,8 @@ def create_repo(tmpdir):
     hg.tag('Version 1.1')
     return hg
 
-def pytest_funcarg__logic(request):
+@pytest.fixture
+def logic(request):
     tmpdir = request.getfuncargvalue('tmpdir')
     hg = create_repo(tmpdir)
     config = DefaultConfig()
