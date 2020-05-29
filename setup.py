@@ -7,11 +7,11 @@ long_description = open(readme).read()
 
 setup(
     name='vcsdeploy',
-    version='0.3',
+    version='0.4',
     author='Antonio Cuni',
     author_email='anto.cuni@gmail.com',
     packages=['vcsdeploy'],
-    url='http://bitbucket.org/antocuni/vcsdeploy',
+    url='https://github.com/antocuni/vcsdeploy',
     license='BSD',
     description='Minimal GUI to deploy updates through a VCS repository',
     long_description=long_description,
