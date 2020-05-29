@@ -30,7 +30,14 @@ class GitLogic(AbstractLogic):
         for tag in self.repo.tags:
             if re.match(self.config.version_regex, tag.name):
                 versions.append(tag.name)
-        #
         # repo.tags are from oldest to newest, but we want the reverse
         versions.reverse()
         return versions
+
+    def update_to(self, version):
+        try:
+            self.repo.git.checkout(version)
+        except git.GitCommandError as e:
+            raise UnknownRevisionError(str(e))
+        ## self.log_update()
+        ## return self.generate_update_report_maybe()
