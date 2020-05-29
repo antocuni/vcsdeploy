@@ -28,6 +28,10 @@ class BaseTestLogic(object):
         self.commit_file(myfile, 'introduce a bug', tag='intermediate_tag')
         myfile.write('version = 1.1')
         self.commit_file(myfile, 'fix the bug', tag='Version_1.1')
+        myfile.write('version = none')
+        self.commit_file(myfile, 'one untagged commit')
+        myfile.write('version = latest')
+        self.commit_file(myfile, 'latest untagged commit')
 
     def test_get_current_version(self, logic):
         assert logic.get_current_version() == 'Latest version'
@@ -140,3 +144,10 @@ class TestGitLogic(BaseTestLogic):
         self.r.index.commit(message)
         if tag:
             self.r.create_tag(tag)
+
+    def update_test_repo(self, rev=None):
+        if rev is None:
+            rev = 'master'
+        if rev == 1:
+            rev = 'HEAD~1'
+        self.r.git.checkout(rev)
