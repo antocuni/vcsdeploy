@@ -7,7 +7,7 @@ long_description = open(readme).read()
 
 setup(
     name='vcsdeploy',
-    version='0.4',
+    version='0.5',
     author='Antonio Cuni',
     author_email='anto.cuni@gmail.com',
     packages=['vcsdeploy'],
