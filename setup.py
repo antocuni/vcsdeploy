@@ -2,8 +2,7 @@ import sys
 import os.path
 from setuptools import setup, find_packages
 
-readme = os.path.join(os.path.dirname(__file__), 'README')
-long_description = open(readme).read()
+long_description = 'Minimal GUI to deploy updates through a VCS repository'
 
 setup(
     name='vcsdeploy',
